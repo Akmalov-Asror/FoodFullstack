@@ -1,0 +1,153 @@
+.card-row{
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(4 , 1fr) !important;
+    overflow-y: scroll;
+    padding: 70px 0;    
+    height: auto;
+}
+.card-row::-webkit-scrollbar{
+    display: none;
+}
+.food-card{
+    background: #1F1D2B;
+    border-radius: 20px;
+    width: 240px;
+    height: 300px;
+    position: relative;
+    margin: 60px 20px;
+    transition: .5s;
+    .card-img{
+        width: 160px;
+        height: 160px;
+        border-radius: 200px;
+        background-color: grey;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%) translateY(35%);
+        top: -50%;
+    }
+    .card-title{
+        margin-top: 100px;
+        text-align: center;
+        color: white;
+        h5{
+            margin: 0;
+            padding: 0;
+        }
+        p{
+            margin: 10px  0;
+            padding: 0;
+        }
+        p:last-child{
+            color: grey;
+        }
+    }
+    .card-buy{
+        button{
+            margin-top: 10px;
+            height: 46px;
+            width: 180px;
+            border: none;
+            border-radius: 10px;
+            outline: none;
+            background: #EA7C69;
+            color: white;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: .5s;
+        }
+        button:focus{
+            background: white;
+            color: #EA7C69;
+        }
+    }
+}
+.food-card:hover{
+    scale: 1.04;
+}
+// iphone 12pro
+@media (max-width: 726px), (max-height: 850px) {
+    .card-row{
+        margin-top: 30px;
+        grid-template-columns: repeat(1 , 1fr);
+        overflow-y: scroll;
+        padding: 70px 0;
+        padding-bottom: 130px;
+        height: 600px;
+    }
+    .food-card{
+        background: #1F1D2B;
+        border-radius: 20px;
+        width: 240px;
+        height: 300px;
+        position: relative;
+        margin: 60px 0px;
+        left: 50%;
+        transform: translateX(-50%);
+        .card-img{
+            width: 160px;
+            height: 160px;
+            border-radius: 200px;
+            background-color: grey;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%) translateY(35%);
+            top: -50%;
+        }
+        .card-title{
+            margin-top: 100px;
+            text-align: center;
+            color: white;
+            h5{
+                margin: 0;
+                padding: 0;
+            }
+            p{
+                margin: 10px  0;
+                padding: 0;
+            }
+            p:last-child{
+                color: grey;
+            }
+        }
+        .card-buy{
+            button{
+                margin-top: 10px;
+                height: 46px;
+                width: 180px;
+                border: none;
+                border-radius: 10px;
+                outline: none;
+                background: #EA7C69;
+                color: white;
+                position: relative;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+    }
+}
+
+//iphone ..
+@media (max-width: 726px){
+    .card-row{
+        margin-top: 30px;
+        grid-template-columns: repeat(1 , 1fr) !important;
+        padding: 70px 0;
+        overflow-y: hidden;
+        padding-bottom: 50px;
+        height: auto;
+    }
+    .food-card{
+        background: #1F1D2B;
+        border-radius: 20px;
+        width: 240px;
+        height: 300px;
+        position: relative;
+        margin: 60px 0px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}

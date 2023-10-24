@@ -3,6 +3,7 @@ using System;
 using Food.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Food.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231024102217_init1")]
+    partial class init1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,7 +83,7 @@ namespace Food.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Count")
@@ -292,19 +295,19 @@ namespace Food.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "fa074b99-ee72-4d1e-8c0b-71a9a787bc96",
+                            Id = "261dc373-1db0-4278-88d9-aa6440105c08",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "b77dc44a-aa93-41ed-964e-6b9e2e3533f4",
+                            Id = "57427abb-05c7-4e37-9233-e67966ed3f24",
                             Name = "OWNER",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
-                            Id = "2495653b-6633-4ac4-a790-bcbbb52e219f",
+                            Id = "94842cb6-6cdb-4355-ae99-1576b7daf4bf",
                             Name = "CUSTOMER",
                             NormalizedName = "CUSTOMER"
                         });
@@ -420,9 +423,7 @@ namespace Food.Migrations
                 {
                     b.HasOne("Food.Entities.Category", null)
                         .WithMany("Food")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
