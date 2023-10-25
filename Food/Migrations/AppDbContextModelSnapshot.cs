@@ -72,6 +72,31 @@ namespace Food.Migrations
                     b.ToTable("Category");
                 });
 
+            modelBuilder.Entity("Food.Entities.Commit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("WriteCommitTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Commits");
+                });
+
             modelBuilder.Entity("Food.Entities.Food", b =>
                 {
                     b.Property<int>("Id")
@@ -80,11 +105,14 @@ namespace Food.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Count")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -97,6 +125,9 @@ namespace Food.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
@@ -292,19 +323,19 @@ namespace Food.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "fa074b99-ee72-4d1e-8c0b-71a9a787bc96",
+                            Id = "88adca16-ecee-4a32-837e-81c231e23e30",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "b77dc44a-aa93-41ed-964e-6b9e2e3533f4",
+                            Id = "f818f45f-1ff6-4b01-b56f-60374131c7ff",
                             Name = "OWNER",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
-                            Id = "2495653b-6633-4ac4-a790-bcbbb52e219f",
+                            Id = "09e506f4-4fdc-461e-8f7e-238939df2219",
                             Name = "CUSTOMER",
                             NormalizedName = "CUSTOMER"
                         });
@@ -416,13 +447,20 @@ namespace Food.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Food.Entities.Commit", b =>
+                {
+                    b.HasOne("Food.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Food.Entities.Food", b =>
                 {
                     b.HasOne("Food.Entities.Category", null)
                         .WithMany("Food")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

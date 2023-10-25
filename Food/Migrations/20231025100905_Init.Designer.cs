@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Food.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231021084332_Init")]
+    [Migration("20231025100905_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -75,6 +75,31 @@ namespace Food.Migrations
                     b.ToTable("Category");
                 });
 
+            modelBuilder.Entity("Food.Entities.Commit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("WriteCommitTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Commits");
+                });
+
             modelBuilder.Entity("Food.Entities.Food", b =>
                 {
                     b.Property<int>("Id")
@@ -89,6 +114,9 @@ namespace Food.Migrations
                     b.Property<int>("Count")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
@@ -100,6 +128,9 @@ namespace Food.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
@@ -295,19 +326,19 @@ namespace Food.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a6d2a7f0-8dec-4e6d-97c1-c48bb7c119af",
+                            Id = "88adca16-ecee-4a32-837e-81c231e23e30",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "3b19ae8a-f51f-4908-a184-d5849aa390d8",
+                            Id = "f818f45f-1ff6-4b01-b56f-60374131c7ff",
                             Name = "OWNER",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
-                            Id = "d9b4946a-ce05-47a4-8147-00edd371507b",
+                            Id = "09e506f4-4fdc-461e-8f7e-238939df2219",
                             Name = "CUSTOMER",
                             NormalizedName = "CUSTOMER"
                         });
@@ -417,6 +448,15 @@ namespace Food.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Food.Entities.Commit", b =>
+                {
+                    b.HasOne("Food.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Food.Entities.Food", b =>

@@ -242,6 +242,26 @@ namespace Food.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Commits",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    WriteCommitTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Commits", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Commits_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Foods",
                 columns: table => new
                 {
@@ -249,7 +269,9 @@ namespace Food.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ImageUrl = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
+                    Price = table.Column<decimal>(type: "numeric", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
+                    CreatedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Count = table.Column<int>(type: "integer", nullable: false),
                     CategoryId = table.Column<int>(type: "integer", nullable: true)
                 },
@@ -268,9 +290,9 @@ namespace Food.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "3b19ae8a-f51f-4908-a184-d5849aa390d8", null, "OWNER", "OWNER" },
-                    { "a6d2a7f0-8dec-4e6d-97c1-c48bb7c119af", null, "ADMIN", "ADMIN" },
-                    { "d9b4946a-ce05-47a4-8147-00edd371507b", null, "CUSTOMER", "CUSTOMER" }
+                    { "09e506f4-4fdc-461e-8f7e-238939df2219", null, "CUSTOMER", "CUSTOMER" },
+                    { "88adca16-ecee-4a32-837e-81c231e23e30", null, "ADMIN", "ADMIN" },
+                    { "f818f45f-1ff6-4b01-b56f-60374131c7ff", null, "OWNER", "OWNER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -311,6 +333,11 @@ namespace Food.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Commits_UserId",
+                table: "Commits",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Foods_CategoryId",
                 table: "Foods",
                 column: "CategoryId");
@@ -336,6 +363,9 @@ namespace Food.Migrations
 
             migrationBuilder.DropTable(
                 name: "AuditLogs");
+
+            migrationBuilder.DropTable(
+                name: "Commits");
 
             migrationBuilder.DropTable(
                 name: "Foods");
