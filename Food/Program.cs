@@ -2,6 +2,8 @@ using Food.AuditManagers;
 using Food.Data;
 using Food.Entities;
 using Food.Interface;
+using Food.Middleware;
+using Microsoft.AspNetCore.Builder;
 using Food.Repositories;
 using Food.Services.JWTService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -111,6 +113,8 @@ app.UseSwaggerUI();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<AuditMiddleware>();
 app.MapControllers();
 
+app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
 app.Run();
