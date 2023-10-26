@@ -12,14 +12,14 @@ public class CommitRepository : ICommitRepository
     private readonly AppDbContext _context;
     public CommitRepository(AppDbContext context) => _context = context;
 
-    public async Task<List<Commit>> GetCommitsAsync() => await _context.Commits.ToListAsync();
+    public async Task<List<Commit>> GetCommitsAsync() => await _context.Commits.Include(x => x.User).ToListAsync();
     public async Task<CommitDto> CreateCommit(CommitDto commit)
     {
         var commits = new Commit();
         commits.WriteCommitTime = DateTime.UtcNow;
         commits.Description = commit.Description;
 
-        var checkUser = await _context.Users.FirstOrDefaultAsync(x => x.UserName == commits.User.Email);
+        var checkUser = await _context.Users.FirstOrDefaultAsync(x => x.UserName == commit.Name);
         if (checkUser != null)
         {
             commits.User = checkUser;

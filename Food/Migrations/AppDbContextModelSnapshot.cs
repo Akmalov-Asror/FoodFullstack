@@ -323,19 +323,19 @@ namespace Food.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "60cc9191-423d-4b92-9e9f-d7d386875ddc",
+                            Id = "0f37b4ec-56d5-40ff-858c-b428b5b5c643",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "c44642f7-537c-444b-a1a9-2f69f4be46a6",
+                            Id = "f7d8dfb9-57f8-4dcc-b482-6f9a353c9ee6",
                             Name = "OWNER",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
-                            Id = "91aaed4c-9371-49bd-8c9f-4efcca0c6f52",
+                            Id = "ea59b99c-9bbe-474e-8820-ceeb2c739737",
                             Name = "CUSTOMER",
                             NormalizedName = "CUSTOMER"
                         });

@@ -23,7 +23,7 @@ var key = configuration["Jwt:Key"];
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(connectionString);
-    //options.EnableSensitiveDataLogging();
+    options.EnableSensitiveDataLogging();
 });
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>

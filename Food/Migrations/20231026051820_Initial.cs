@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Food.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -290,9 +290,9 @@ namespace Food.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "09e506f4-4fdc-461e-8f7e-238939df2219", null, "CUSTOMER", "CUSTOMER" },
-                    { "88adca16-ecee-4a32-837e-81c231e23e30", null, "ADMIN", "ADMIN" },
-                    { "f818f45f-1ff6-4b01-b56f-60374131c7ff", null, "OWNER", "OWNER" }
+                    { "0f37b4ec-56d5-40ff-858c-b428b5b5c643", null, "ADMIN", "ADMIN" },
+                    { "ea59b99c-9bbe-474e-8820-ceeb2c739737", null, "CUSTOMER", "CUSTOMER" },
+                    { "f7d8dfb9-57f8-4dcc-b482-6f9a353c9ee6", null, "OWNER", "OWNER" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -8,7 +8,7 @@ public partial class FoodRepository : IFoodRepository
     private readonly AppDbContext _context;
     public async Task<List<Entities.Food>> GetAllByTime()
     {
-        DateTime currentTime = DateTime.Now;
+        DateTime currentTime = DateTime.UtcNow;
         DateTime twentyFourHoursAgo = currentTime.AddHours(-24);
 
         return await _context.Foods
