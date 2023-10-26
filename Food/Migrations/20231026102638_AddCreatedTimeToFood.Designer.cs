@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Food.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231026070041_InitialNew2")]
-    partial class InitialNew2
+    [Migration("20231026102638_AddCreatedTimeToFood")]
+    partial class AddCreatedTimeToFood
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -179,31 +179,21 @@ namespace Food.Migrations
                     b.Property<int>("Count")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int>("EOrderType")
                         .HasColumnType("integer");
 
                     b.Property<int>("EStatus")
                         .HasColumnType("integer");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
+                    b.Property<int>("FoodId")
+                        .HasColumnType("integer");
 
                     b.Property<decimal>("Total")
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FoodId");
 
                     b.ToTable("Orders");
                 });
@@ -332,19 +322,19 @@ namespace Food.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f1081811-eafd-48cd-9c96-eb21c2e483b9",
+                            Id = "15245294-7040-40b8-a558-2ab51a4cf5d9",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8a11b870-0341-4bde-96e1-81664d09ffc8",
+                            Id = "5cc474d3-da93-47ae-88bc-32ed7e396dea",
                             Name = "OWNER",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
-                            Id = "d9f92a2d-2bf3-4042-bb5e-b648ce14c962",
+                            Id = "5b226f1c-1b9b-41f9-9c34-fb291f7218c6",
                             Name = "CUSTOMER",
                             NormalizedName = "CUSTOMER"
                         });
@@ -470,6 +460,17 @@ namespace Food.Migrations
                     b.HasOne("Food.Entities.Category", null)
                         .WithMany("Food")
                         .HasForeignKey("CategoryId");
+                });
+
+            modelBuilder.Entity("Food.Entities.Order", b =>
+                {
+                    b.HasOne("Food.Entities.Food", "Food")
+                        .WithMany()
+                        .HasForeignKey("FoodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Food");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

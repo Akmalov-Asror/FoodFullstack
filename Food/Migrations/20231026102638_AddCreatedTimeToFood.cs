@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Food.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class AddCreatedTimeToFood : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -98,24 +98,6 @@ namespace Food.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Information", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Orders",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ImageUrl = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    Price = table.Column<decimal>(type: "numeric", nullable: false),
-                    Total = table.Column<decimal>(type: "numeric", nullable: false),
-                    Count = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -285,14 +267,37 @@ namespace Food.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FoodId = table.Column<int>(type: "integer", nullable: false),
+                    Total = table.Column<decimal>(type: "numeric", nullable: false),
+                    Count = table.Column<int>(type: "integer", nullable: false),
+                    EOrderType = table.Column<int>(type: "integer", nullable: false),
+                    EStatus = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_Foods_FoodId",
+                        column: x => x.FoodId,
+                        principalTable: "Foods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "0f37b4ec-56d5-40ff-858c-b428b5b5c643", null, "ADMIN", "ADMIN" },
-                    { "ea59b99c-9bbe-474e-8820-ceeb2c739737", null, "CUSTOMER", "CUSTOMER" },
-                    { "f7d8dfb9-57f8-4dcc-b482-6f9a353c9ee6", null, "OWNER", "OWNER" }
+                    { "15245294-7040-40b8-a558-2ab51a4cf5d9", null, "ADMIN", "ADMIN" },
+                    { "5b226f1c-1b9b-41f9-9c34-fb291f7218c6", null, "CUSTOMER", "CUSTOMER" },
+                    { "5cc474d3-da93-47ae-88bc-32ed7e396dea", null, "OWNER", "OWNER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -341,6 +346,11 @@ namespace Food.Migrations
                 name: "IX_Foods_CategoryId",
                 table: "Foods",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_FoodId",
+                table: "Orders",
+                column: "FoodId");
         }
 
         /// <inheritdoc />
@@ -368,9 +378,6 @@ namespace Food.Migrations
                 name: "Commits");
 
             migrationBuilder.DropTable(
-                name: "Foods");
-
-            migrationBuilder.DropTable(
                 name: "Information");
 
             migrationBuilder.DropTable(
@@ -384,6 +391,9 @@ namespace Food.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Foods");
 
             migrationBuilder.DropTable(
                 name: "Category");
