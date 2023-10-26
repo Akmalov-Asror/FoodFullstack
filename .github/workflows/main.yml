@@ -1,28 +1,45 @@
-name: Publish 🚀🚀
+name: CI/CD for ASP.NET Core and React
 
 on:
-  workflow_dispatch:
   push:
     branches:
-    - main
+      - main  # Adjust the branch name you want to trigger the workflow on
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+    - name: Checkout Code
+      uses: actions/checkout@v2
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '7.0.x'
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14  # Adjust the Node.js version you require
 
-      - name: Restore
-        run: dotnet restore ./CurrentTimeService.sln
+    - name: Install Node Dependencies
+      run: npm install
+      working-directory: frontend  # Adjust to your React app's directory path
 
-      - name: Build
-        run: dotnet build ./CurrentTImeService.sln --configuration Release --no-restore
+    - name: Build React App
+      run: npm run build
+      working-directory: frontend  # Adjust to your React app's directory path
 
-      - name: Publish
-        run: dotnet publish ./CurrentTimeService.sln --configuration Relaese --no-build
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 7.0  # Adjust the .NET Core version you require
+
+    - name: Build and Test ASP.NET Core
+      run: |
+        dotnet build
+        dotnet test
+      working-directory: backend  # Adjust to your ASP.NET Core app's directory path
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy to Hosting Service
