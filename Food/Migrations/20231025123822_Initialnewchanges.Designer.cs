@@ -3,6 +3,7 @@ using System;
 using Food.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Food.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231025123822_Initialnewchanges")]
+    partial class Initialnewchanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -323,19 +326,19 @@ namespace Food.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "60cc9191-423d-4b92-9e9f-d7d386875ddc",
+                            Id = "7c2f170c-c4af-49ed-8136-dd7e34394b48",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "c44642f7-537c-444b-a1a9-2f69f4be46a6",
+                            Id = "3a1beb2c-ae25-4f43-9961-8bcf0356f0a5",
                             Name = "OWNER",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
-                            Id = "91aaed4c-9371-49bd-8c9f-4efcca0c6f52",
+                            Id = "b1c847a7-5273-4f14-a5a4-d0c0df78ee64",
                             Name = "CUSTOMER",
                             NormalizedName = "CUSTOMER"
                         });

@@ -19,7 +19,7 @@ public class CommitRepository : ICommitRepository
         commits.WriteCommitTime = DateTime.UtcNow;
         commits.Description = commit.Description;
 
-        var checkUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == commits.User.Id);
+        var checkUser = await _context.Users.FirstOrDefaultAsync(x => x.UserName == commits.User.Email);
         if (checkUser != null)
         {
             commits.User = checkUser;
