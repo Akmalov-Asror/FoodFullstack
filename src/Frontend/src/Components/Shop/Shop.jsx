@@ -4,7 +4,17 @@ import "./Shop.scss"
 import Delay from '../Delay/Delay'
 import { useNavigate } from 'react-router-dom'
 import Logo from "../../Assets/Images/English breakfast-pana 1.png"
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { getFoodsFromLocalStorage } from '../../Redux/UserFood'
+import { ToastContainer, toast } from 'react-toastify';
+
+const selectFoodData = (state) => state.Foods.foodArray;
 export default function Shop() {
+    const dispatch = useDispatch()
+    const notify = () => toast.error('Your order has been deleted!');
+
+    const FoodData = useSelector(selectFoodData);
     const navigate = useNavigate()
     const [priceFoods, setPriceFoods] = useState([])
     const [offcanvas, setOffcanvas] = useState(false)
@@ -21,36 +31,7 @@ export default function Shop() {
     // input values
     const [isLoading, setIsLoading] = useState(true);
     const [activeButton, setActiveButton] = useState("btn1")
-    const [purchasedFood, setPurchasedFood] = useState([
-        {
-            img: "https://www.mashed.com/img/gallery/the-best-new-fast-food-menu-items-weve-tried-in-2023-so-far/l-intro-1682446897.jpg",
-            name: "Lavash",
-            price: 220,
-            dex: "Spicy seasoned seafood noodles",
-            count: 1,
-        },
-        {
-            img: "https://www.mashed.com/img/gallery/the-best-new-fast-food-menu-items-weve-tried-in-2023-so-far/l-intro-1682446897.jpg",
-            name: "Lavash",
-            price: 224340,
-            dex: "Spicy seasoned seafood noodles",
-            count: 1,
-        },
-        {
-            img: "https://www.mashed.com/img/gallery/the-best-new-fast-food-menu-items-weve-tried-in-2023-so-far/l-intro-1682446897.jpg",
-            name: "Lavash",
-            price: 25320,
-            dex: "Spicy seasoned seafood noodles",
-            count: 1,
-        },
-        {
-            img: "https://www.mashed.com/img/gallery/the-best-new-fast-food-menu-items-weve-tried-in-2023-so-far/l-intro-1682446897.jpg",
-            name: "Lavash",
-            price: 2250,
-            dex: "Spicy seasoned seafood noodles",
-            count: 1,
-        },
-    ])
+
     function bootstrapBnt() {
         let cur = sessionStorage.getItem("shop")
         setOffcanvas(true)
@@ -58,6 +39,9 @@ export default function Shop() {
             setOffcanvas(cur)
         }
     }
+    useState(() => {
+        dispatch(getFoodsFromLocalStorage())
+    }, [])
     useEffect(() => {
         const redirectTimeout = setTimeout(() => {
 
@@ -80,7 +64,7 @@ export default function Shop() {
         };
     }, [])
     useEffect(() => {
-        const prices = purchasedFood.map(item => item.price);
+        const prices = FoodData.map(item => item.price);
         setPriceFoods(prices);
     }, []);
 
@@ -136,27 +120,72 @@ export default function Shop() {
         setCardFullDate(i.target.value)
     }
     function pay() {
-        
+
+    }
+    function incorrect(index) {
+        if (FoodData[index].count === 1) {
+            const newList = [...FoodData];
+            newList.splice(index, 1);
+            localStorage.setItem("FoodsArray", JSON.stringify(newList));
+            dispatch(getFoodsFromLocalStorage());
+        }
+        else if (FoodData[index].count > 1) {
+            const newList = [...FoodData];
+            newList[index] = {
+                ...newList[index],
+                count: newList[index].count - 1
+            }
+            localStorage.setItem("FoodsArray", JSON.stringify(newList));
+            dispatch(getFoodsFromLocalStorage());
+        }
+    }
+    function correct(index) {
+        const newList = [...FoodData];
+        newList[index] = {
+            ...newList[index],
+            count: newList[index].count + 1
+        }
+        console.log(newList);
+        localStorage.setItem("FoodsArray", JSON.stringify(newList));
+        dispatch(getFoodsFromLocalStorage());
+    }
+    function deleteFood(index) {
+        const newList = [...FoodData];
+        newList.splice(index, 1);
+        localStorage.setItem("FoodsArray", JSON.stringify(newList));
+        dispatch(getFoodsFromLocalStorage());
     }
     return (
         <div >
+            <ToastContainer
+                position="top-center"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable
+                pauseOnHover={false}
+                theme="dark"
+                className='notificaton' />
             {!isLoading ? <Delay /> : <>
                 <Home />
 
                 <div className={`${offcanvas === "true" ? "active-filter" : ""} offcanvas-filter`} onClick={closeOffcanvas}>
                 </div>
                 <div className={`${offcanvas === "true" ? "active-offcanvas" : ""} offcanvass`}>
-                    {purchasedFood.length === 0 || purchasedFood === undefined || purchasedFood === null ? <>
+                    {FoodData.length === 0 || FoodData === undefined || FoodData === null ? <>
                         <div className='emptyBox'>
                             <img src={Logo} alt="logo" />
-                            <button onClick={noFoods}>To Order</button>
+                            <div><button onClick={noFoods}>To Order</button></div>
                         </div>
                     </> : <>
                         {paymentMethod ? <>
-                            <div className='purchased-foods container'>
+                            <div className='purchased-foods container  mx-auto'>
                                 <div className='order-div'>
                                     <div>
-                                        <i onClick={()=>navigate('/')} className='bi bi-arrow-left'></i>
+                                        <i onClick={() => navigate('/')} className='bi bi-arrow-left'></i>
                                         <h4>Orders #34562</h4>
                                     </div>
                                     <div >
@@ -170,27 +199,28 @@ export default function Shop() {
                                         <h6>Food</h6>
                                     </div>
                                     <div>
-                                        <h6>Description</h6>
+                                        <h6>Name</h6>
                                         <h6>Price</h6>
                                     </div>
                                 </div>
-                                {purchasedFood?.length > 0 ? purchasedFood?.map((iteam, index) => {
+                                {FoodData !== undefined || FoodData !== null ? FoodData?.map((iteam, index) => {
                                     return (
                                         <div className='product-purchase'>
                                             <div>
-                                                <div style={{ backgroundImage: `url(${iteam.img})` }}>
+                                                <div style={{ backgroundImage: `url(${iteam.imageUrl})` }}>
                                                 </div>
                                                 <div>
-                                                    <h6>{iteam.dex}</h6>
+                                                    <h6>{iteam.name
+                                                    }</h6>
                                                     <h6>${priceFoods[index]}</h6>
 
                                                 </div>
                                             </div>
                                             <div className='action-div'>
                                                 <div>
-                                                    <button>-</button>
+                                                    <button onClick={() => incorrect(index)}><p >-</p></button>
                                                     <div>{iteam.count}</div>
-                                                    <button>+</button>
+                                                    <button onClick={() => correct(index)}>+</button>
                                                 </div>
                                                 <div>
                                                     <h6>
@@ -200,12 +230,13 @@ export default function Shop() {
                                             </div>
                                             <div className='comfirm-input'>
                                                 <input placeholder='Order Note...' type="text" name="" id="" />
-                                                <button><i className='bi bi-trash'></i></button>
+                                                <button onClick={() => {deleteFood(index); notify()}}><i className='bi bi-trash'></i></button>
                                             </div>
+
                                         </div>
                                     )
                                 }) : <Delay />}
-                                <div onClick={() => payment()} className='confirm-payment'><button>Continue to Payment</button></div>
+                                <div><div onClick={() => payment()} className='confirm-payment'><button>Continue to Payment</button></div></div>
                             </div>
                         </> : <>
                             <form onSubmit={pay} className='container paymentOffnavas'>
@@ -245,7 +276,7 @@ export default function Shop() {
                                             <label className='input-label' htmlFor="Expiration">Expiration Date</label>
                                             <div className='input-icon-div'>
                                                 <input onChange={(i) => CardDate(i)} className='input-verifiy' placeholder='02/2022' type="date" name="Expiration" id="cardDate" />
-                                                <div className='input-icon' style={{right: "45px"}}>
+                                                <div className='input-icon' style={{ right: "45px" }}>
                                                     {CardFullDate.length < 10 ? <p className='text-danger mt-3'><i class="bi bi-exclamation-lg"></i></p> : <p className='text-success m-0 p-0'><i className='bi bi-patch-check'></i></p>}
                                                 </div>
                                             </div>
@@ -263,8 +294,8 @@ export default function Shop() {
                                     <div className='input-row-select'>
 
                                         <div className='select-row'>
-
                                             <div>
+                                                <p className='text-start'>Order type</p>
                                                 <div className='select' type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                     {open ? <i className="bi bi-arrow-up-short"></i> : <i className="bi bi-arrow-down-short"></i>} <div><p>{selectVal}</p></div>
                                                     <ul className="dropdown-menu select-iteam">
