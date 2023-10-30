@@ -62,15 +62,27 @@ public class SellerFoodRepository : ISellerFoodRepository
         return topSellerFoods;
     }
 
-    public async Task<string> GetNameFromClaims(ClaimsPrincipal claims)
+    public async Task<PaymentForOrder> GetNameFromClaims(ClaimsPrincipal claims, PaymentForOrderDto paymentForOrder)
     {
         var nameClaimEmail = claims.FindFirst(claim => claim.Type == ClaimTypes.Email);
-        if (nameClaimEmail != null)
+        var nameClaim = claims.FindFirst(claim => claim.Type == ClaimTypes.Name);
+
+        var payment = new PaymentForOrder();
+        if (nameClaimEmail != null && nameClaim != null)
         {
-            
+            payment.UserEmail = nameClaimEmail.Value;
+            payment.UserName = nameClaim.Value;
+            payment.Name = paymentForOrder.Name;
+            payment.CardNumber = paymentForOrder.CardNumber;
+            payment.CardPassword = paymentForOrder.CardPassword;
+            payment.TableNumber = paymentForOrder.TableNumber;
+            payment.DateTime = DateTime.UtcNow;
+
+            _context.PaymentForOrders.Add(payment);
+            await _context.SaveChangesAsync();
         }
 
-        return null; 
+        return payment;
     }
 
 }

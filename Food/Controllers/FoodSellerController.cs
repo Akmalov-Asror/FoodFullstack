@@ -21,9 +21,6 @@ public class FoodSellerController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetByCount() => Ok(await _foodRepository.GetTopSellerFoodsByPrice());
 
-    [HttpGet("User")]
-    public async Task<IActionResult> GetUser()
-    {
-        return Ok(await _foodRepository.GetNameFromClaims(User));
-    }
+    [HttpPost("User")]
+    public async Task<IActionResult> GetUser(PaymentForOrderDto paymentForOrder) => Ok(await _foodRepository.GetNameFromClaims(User, paymentForOrder));
 }

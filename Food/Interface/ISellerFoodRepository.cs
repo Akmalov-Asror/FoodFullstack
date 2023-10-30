@@ -9,7 +9,7 @@ public interface ISellerFoodRepository
 {
     Task<Entities.SellerFood> SellerFood(int foodId, SellerFood sellerFood);
     Task<List<Entities.SellerFood>> GetTopSellerFoodsByPrice();
-    Task<string> GetNameFromClaims(ClaimsPrincipal claims);
+    Task<PaymentForOrder> GetNameFromClaims(ClaimsPrincipal claims, PaymentForOrderDto paymentForOrder);
 
 
 }

@@ -21,6 +21,7 @@ public class AppDbContext : IdentityDbContext<User>
     public DbSet<Entities.Food> Foods { get; set; }
     public DbSet<SellerFood> SellerFoods { get; set; }
     public DbSet<Hide> Hides { get; set; }
+    public DbSet<PaymentForOrder> PaymentForOrders { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
