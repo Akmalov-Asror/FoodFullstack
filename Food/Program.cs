@@ -92,6 +92,7 @@ builder.Services.AddScoped<IAuditManager, AuditManager>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICommitRepository, CommitRepository>();
 builder.Services.AddScoped<IFoodRepository,FoodRepository>();
+builder.Services.AddScoped<ISellerFoodRepository, SellerFoodRepository>();
 builder.Services.AddScoped<FoodRepository>();
 builder.Services.AddScoped<CategoryRepository>();
 builder.Services.AddScoped<InformationRepository>();
@@ -109,7 +110,7 @@ app.UseSwaggerUI();
     var db = app.Services.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
 }*/
-
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

@@ -3,6 +3,7 @@ using System;
 using Food.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Food.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231027035250_Init2")]
+    partial class Init2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -248,29 +251,6 @@ namespace Food.Migrations
                     b.ToTable("Payment");
                 });
 
-            modelBuilder.Entity("Food.Entities.SellerFood", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Count")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SellerFoods");
-                });
-
             modelBuilder.Entity("Food.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -363,19 +343,19 @@ namespace Food.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "74b6b207-09b5-4316-ba7b-19027b3e210a",
+                            Id = "4ea56097-c20c-4f99-bf80-bae772738ef0",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "d8a69e3b-9826-47f8-86f0-1b07f50ee283",
+                            Id = "f65c9a63-220f-43c4-8a71-7461747edef7",
                             Name = "OWNER",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
-                            Id = "10e319ae-b9a7-48ef-a156-20758841e177",
+                            Id = "6702f9ba-c919-4c70-9a2d-4fb5839539c8",
                             Name = "CUSTOMER",
                             NormalizedName = "CUSTOMER"
                         });
