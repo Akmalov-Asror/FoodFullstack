@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Food.AuditManagers.Attributes;
 using Food.Dto_s;
 using Food.Interface;
 using Microsoft.AspNetCore.Authorization;
@@ -22,5 +23,6 @@ public class FoodSellerController : ControllerBase
     public async Task<IActionResult> GetByCount() => Ok(await _foodRepository.GetTopSellerFoodsByPrice());
 
     [HttpPost("User")]
+    [IgnoreAudit("Some reason")]    
     public async Task<IActionResult> GetUser(PaymentForOrderDto paymentForOrder) => Ok(await _foodRepository.GetNameFromClaims(User, paymentForOrder));
 }

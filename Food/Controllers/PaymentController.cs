@@ -11,4 +11,3 @@ public class PaymentController : MoldController<Payment, PaymentRepository>
 {
     public PaymentController(PaymentRepository repository) : base(repository) { }
 }
-//how to write all controller for one controller 

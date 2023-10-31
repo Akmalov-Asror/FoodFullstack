@@ -37,7 +37,6 @@ public class AuthService : IAuthService
             throw new Exception("Password isn't hashed");
         }
 
-
         await _userManager.AddToRoleAsync(user, Enum.GetName(request.Role).ToUpper());
         await _context.SaveChangesAsync();
         return user;
@@ -49,7 +48,6 @@ public class AuthService : IAuthService
 
         if (user != null)
         {
-
             var roles = await _userManager.GetRolesAsync(user);
             var roleClaims = roles.Select(role => new Claim(ClaimTypes.Role, role)).ToList();
             roleClaims.Add(new Claim(ClaimTypes.Name, request.Name));

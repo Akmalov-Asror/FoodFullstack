@@ -14,13 +14,7 @@ namespace Food.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
-    private readonly UserManager<User> _userManager;
-
-    public AuthController(IAuthService authService, UserManager<User> userManager)
-    {
-        _userManager = userManager;
-        _authService = authService;
-    }
+    public AuthController(IAuthService authService) => _authService = authService;
 
     [HttpGet,Authorize]
     public ActionResult<string> GetMyName() => Ok(CreateTokenInJwtAuthorizationFromUsers.GetMyId());

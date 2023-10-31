@@ -3,15 +3,17 @@ using Food.Data;
 using Food.Entities;
 using Food.Interface;
 using Food.Middleware;
-using Microsoft.AspNetCore.Builder;
 using Food.Repositories;
 using Food.Services.JWTService;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Reflection;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = new ConfigurationBuilder()
@@ -59,6 +61,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
@@ -86,7 +89,12 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-
+builder.Services.AddFluentValidationAutoValidation(o =>
+{
+    o.DisableDataAnnotationsValidation = false;
+});
+builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(Program)));
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAuditManager, AuditManager>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
