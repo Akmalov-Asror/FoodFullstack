@@ -29,14 +29,11 @@ public class CategoryRepository : ICategoryRepository
             var newCategory = new Category
             {
                 Name = category.Name,
-                Food = new List<Entities.Food>()
             };
 
-            var getFood = await _context.Foods.FirstOrDefaultAsync(x => x.Id == category.FoodId);
 
-            if (getFood != null)
+            if (newCategory != null)
             {
-                newCategory.Food.Add(getFood);
                 _context.Category.Add(newCategory);
                 await _context.SaveChangesAsync();
                 return newCategory;
