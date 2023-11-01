@@ -31,7 +31,6 @@ public class CategoryRepository : ICategoryRepository
                 Name = category.Name,
             };
 
-
             if (newCategory != null)
             {
                 _context.Category.Add(newCategory);

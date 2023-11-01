@@ -29,7 +29,7 @@ public class CategoryController : ControllerBase
 
     [HttpGet("Id")]
     public async Task<IActionResult> GetById(string name) => Ok(await _categoryRepository.GetByName(name));
-
+    [HttpPost]
     public async Task<IActionResult> CreateCategory(CategoryDto categoryDto)
     {
         var validationResult = await _categoryValidator.ValidateAsync(categoryDto);
