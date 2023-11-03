@@ -2,6 +2,8 @@
 using Food.AuditManagers;
 using Food.Entities;
 using System.Security.Claims;
+using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Food.Middleware;
 
@@ -35,13 +37,16 @@ public class AuditMiddleware
                 userName = context.User.FindFirst(ClaimTypes.Name)?.Value;
             }
             userName = string.IsNullOrEmpty(userName) ? "Coma" : userName;
+            var data = new StreamReader(context.Request.Body).ToString() ?? " ";
 
+            Console.WriteLine(data);
             var auditLog = new AuditLog
             {
                 UserName = userName,
                 Action = context.Request.Method,
                 Path = context.Request.Path,
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.UtcNow,
+                Data = data,
             };
 
             await _next(context);
@@ -49,7 +54,7 @@ public class AuditMiddleware
             auditLog.ResponseStatusCode = context.Response.StatusCode;
             auditLog.ResponseTimestamp = DateTime.UtcNow;
             auditLog.UserName = userName;
-
+            
             await _auditManager.WriteAuditLog(auditLog);
         }
     }

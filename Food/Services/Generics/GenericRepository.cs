@@ -1,11 +1,12 @@
 ﻿using System.Linq.Expressions;
+using Food.Data;
 using Food.Entities;
 using Food.Entities.EntityInterface;
 using Microsoft.EntityFrameworkCore;
 
 namespace Food.Services.Generics;
 
-public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity> where TEntity : class, IEntity where TContext : DbContext
+public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity> where TEntity : class, IEntity where TContext : AppDbContext
 {
     private readonly TContext _context;
     public GenericRepository(TContext context) => _context = context;
@@ -21,13 +22,13 @@ public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity> 
     public async Task<TEntity> Add(TEntity entity)
     {
         _context.Set<TEntity>().Add(entity);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesWithAudit(true);
         return entity;
     }
     public async Task<TEntity> Update(TEntity entity)
     {
         _context.Entry(entity).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesWithAudit(true);
         return entity;
     }
     public async Task<TEntity> Delete(int id)
@@ -36,8 +37,7 @@ public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity> 
         if (entity == null) return entity;
 
         _context.Set<TEntity>().Remove(entity);
-        await _context.SaveChangesAsync();
-
+        await _context.SaveChangesWithAudit(true);
         return entity;
     }
     public async Task SaveAsync()

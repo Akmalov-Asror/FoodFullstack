@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Food.Entities;
 using Food.Entities.EntityInterface;
+using Food.Services;
 using Food.Services.Generics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +16,10 @@ namespace Food.Controllers;
 public abstract class MoldController<TEntity, TRepository> : ControllerBase where TEntity : class, IEntity where TRepository : IGenericRepository<TEntity>
 {
     private readonly IGenericRepository<TEntity> _genericRepository;
-    protected MoldController(IGenericRepository<TEntity> genericRepository) => _genericRepository = genericRepository;
+    protected MoldController(IGenericRepository<TEntity> genericRepository)
+    {
+        _genericRepository = genericRepository;
+    }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<TEntity>>> Get() => await _genericRepository.GetAll();
@@ -42,6 +46,7 @@ public abstract class MoldController<TEntity, TRepository> : ControllerBase wher
     [Authorize(Roles = "ADMIN,OWNER")]
     public virtual async Task<ActionResult<TEntity>> Post(TEntity movie)
     {
+        
         await _genericRepository.Add(movie);
         return (movie);
     }

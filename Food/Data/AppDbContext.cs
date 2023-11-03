@@ -1,14 +1,20 @@
-﻿using Food.Entities;
+﻿using Food.AuditManagers;
+using Food.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace Food.Data;
 
 public class AppDbContext : IdentityDbContext<User>
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options, IServiceProvider services) : base(options)
+    private readonly IHttpContextAccessor _accessor;
+
+    public AppDbContext(DbContextOptions<AppDbContext> options, IServiceProvider services,IHttpContextAccessor accessor) : base(options)
     {
+        _accessor = accessor;
         this.Services = services;
     }
     public IServiceProvider Services { get; set; }
@@ -29,5 +35,94 @@ public class AppDbContext : IdentityDbContext<User>
     {
         base.OnModelCreating(builder);
         builder.ApplyConfiguration<IdentityRole>(new RoleConfiguration(Services));
+    }
+
+    public async Task SaveChangesWithAudit(bool auditChanges)
+    {
+        if (!auditChanges)
+        {
+            await SaveChangesAsync();
+            return;
+        }
+
+        var context = _accessor.HttpContext;
+        var changes = ChangeTracker.Entries();
+
+        var auditManager = Services.CreateScope().ServiceProvider.GetRequiredService<IAuditManager>();
+
+        foreach (var ch in changes)
+        {
+            if (ch.State == EntityState.Modified)
+            {
+                var originalValues = JsonSerializer.Serialize(ch.OriginalValues.ToObject());
+                var oldData = JsonSerializer.Serialize(ch.CurrentValues.ToObject());
+                var userName = context.User.Identity.Name;
+                if (string.IsNullOrEmpty(userName))
+                {
+                    userName = context.User.FindFirst(ClaimTypes.Name)?.Value;
+                }
+                userName = string.IsNullOrEmpty(userName) ? "Coma" : userName;
+
+                var members = ch.Members.ToArray();
+
+                await auditManager.WriteAuditLog(new AuditLog
+                {
+                    UserName = userName,
+                    Action = Enum.GetName(ch.State)!,
+                    Data = originalValues,
+                    OldData = oldData,
+                    Path = context.Request.Path,
+                    Timestamp = DateTime.UtcNow,
+                    ResponseStatusCode = context.Response.StatusCode,
+                });
+            }
+            if (ch.State == EntityState.Added)
+            {
+                var originalValues = JsonSerializer.Serialize(ch.OriginalValues.ToObject());
+                var userName = context.User.Identity.Name;
+                if (string.IsNullOrEmpty(userName))
+                {
+                    userName = context.User.FindFirst(ClaimTypes.Name)?.Value;
+                }
+                userName = string.IsNullOrEmpty(userName) ? "Coma" : userName;
+
+                var members = ch.Members.ToArray();
+
+                await auditManager.WriteAuditLog(new AuditLog
+                {
+                    UserName = userName,
+                    Action = Enum.GetName(ch.State)!,
+                    Data = originalValues,
+                    Path = context.Request.Path,
+                    Timestamp = DateTime.UtcNow,
+                    ResponseStatusCode = context.Response.StatusCode,
+                });
+            }
+            if (ch.State == EntityState.Deleted)
+            {
+                var originalValues = JsonSerializer.Serialize(ch.OriginalValues.ToObject());
+                var userName = context.User.Identity.Name;
+                if (string.IsNullOrEmpty(userName))
+                {
+                    userName = context.User.FindFirst(ClaimTypes.Name)?.Value;
+                }
+                userName = string.IsNullOrEmpty(userName) ? "Coma" : userName;
+
+                await auditManager.WriteAuditLog(new AuditLog
+                {
+                    UserName = userName,
+                    Action = Enum.GetName(ch.State)!,
+                    Data = originalValues,
+                    Path = context.Request.Path,
+                    Timestamp = DateTime.UtcNow,
+                    ResponseStatusCode = context.Response.StatusCode,
+                });
+
+                ch.State = EntityState.Unchanged;
+            }
+
+        }
+
+        await SaveChangesAsync();
     }
 }

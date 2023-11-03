@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Food.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231030085822_Unut1")]
-    partial class Unut1
+    [Migration("20231102125352_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,6 +35,12 @@ namespace Food.Migrations
 
                     b.Property<string>("Action")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Data")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OldData")
                         .HasColumnType("text");
 
                     b.Property<string>("Path")
@@ -187,6 +193,34 @@ namespace Food.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Information");
+                });
+
+            modelBuilder.Entity("Food.Entities.MessageModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ReceiverUserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SenderUserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MessageModels");
                 });
 
             modelBuilder.Entity("Food.Entities.Order", b =>
@@ -385,6 +419,24 @@ namespace Food.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Food.Entities.UserChatModel", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProfilePictureUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserChatModels");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -413,19 +465,19 @@ namespace Food.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "962b3cee-5fe9-4b82-9e2d-37d570dbb6dd",
+                            Id = "ef912485-4c11-426e-a5c9-8fe2c031294c",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "bee4f93a-9447-449d-b6d7-505a5134e003",
+                            Id = "c43aaf2b-c538-48f7-8df2-2203957d40d1",
                             Name = "OWNER",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
-                            Id = "e0a43b56-d4a7-4913-8fdc-faeb2e187814",
+                            Id = "8e0c8294-06fc-4093-ab8f-d012186cea57",
                             Name = "CUSTOMER",
                             NormalizedName = "CUSTOMER"
                         });

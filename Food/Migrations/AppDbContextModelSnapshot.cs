@@ -34,6 +34,12 @@ namespace Food.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Data")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OldData")
+                        .HasColumnType("text");
+
                     b.Property<string>("Path")
                         .IsRequired()
                         .HasColumnType("text");
@@ -456,19 +462,19 @@ namespace Food.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a8cd2c73-e134-4ad4-8eb7-bcd90163136c",
+                            Id = "ef912485-4c11-426e-a5c9-8fe2c031294c",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "0f1f1c87-d511-490d-a03e-b851ed3c762f",
+                            Id = "c43aaf2b-c538-48f7-8df2-2203957d40d1",
                             Name = "OWNER",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
-                            Id = "81c35f1e-5e0b-4e44-9b46-3573c5b6803b",
+                            Id = "8e0c8294-06fc-4093-ab8f-d012186cea57",
                             Name = "CUSTOMER",
                             NormalizedName = "CUSTOMER"
                         });

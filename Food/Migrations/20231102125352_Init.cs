@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Food.Migrations
 {
     /// <inheritdoc />
-    public partial class AddCreatedTimeToFood : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -62,6 +62,8 @@ namespace Food.Migrations
                     UserName = table.Column<string>(type: "text", nullable: true),
                     Action = table.Column<string>(type: "text", nullable: false),
                     Path = table.Column<string>(type: "text", nullable: false),
+                    Data = table.Column<string>(type: "text", nullable: true),
+                    OldData = table.Column<string>(type: "text", nullable: true),
                     ResponseStatusCode = table.Column<int>(type: "integer", nullable: false),
                     Timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ResponseTimestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
@@ -85,6 +87,20 @@ namespace Food.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Hides",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Hides", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Information",
                 columns: table => new
                 {
@@ -98,6 +114,22 @@ namespace Food.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Information", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MessageModels",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    SenderUserId = table.Column<string>(type: "text", nullable: false),
+                    ReceiverUserId = table.Column<string>(type: "text", nullable: false),
+                    Content = table.Column<string>(type: "text", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageModels", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -115,6 +147,54 @@ namespace Food.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Payment", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PaymentForOrders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserEmail = table.Column<string>(type: "text", nullable: false),
+                    UserName = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    CardNumber = table.Column<string>(type: "text", nullable: false),
+                    CardPassword = table.Column<string>(type: "text", nullable: false),
+                    TableNumber = table.Column<string>(type: "text", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PaymentForOrders", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SellerFoods",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Count = table.Column<int>(type: "integer", nullable: false),
+                    ImgUrl = table.Column<string>(type: "text", nullable: false),
+                    Price = table.Column<decimal>(type: "numeric", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SellerFoods", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserChatModels",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    UserName = table.Column<string>(type: "text", nullable: false),
+                    ProfilePictureUrl = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserChatModels", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -276,6 +356,7 @@ namespace Food.Migrations
                     FoodId = table.Column<int>(type: "integer", nullable: false),
                     Total = table.Column<decimal>(type: "numeric", nullable: false),
                     Count = table.Column<int>(type: "integer", nullable: false),
+                    CreatedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     EOrderType = table.Column<int>(type: "integer", nullable: false),
                     EStatus = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -295,9 +376,9 @@ namespace Food.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "15245294-7040-40b8-a558-2ab51a4cf5d9", null, "ADMIN", "ADMIN" },
-                    { "5b226f1c-1b9b-41f9-9c34-fb291f7218c6", null, "CUSTOMER", "CUSTOMER" },
-                    { "5cc474d3-da93-47ae-88bc-32ed7e396dea", null, "OWNER", "OWNER" }
+                    { "8e0c8294-06fc-4093-ab8f-d012186cea57", null, "CUSTOMER", "CUSTOMER" },
+                    { "c43aaf2b-c538-48f7-8df2-2203957d40d1", null, "OWNER", "OWNER" },
+                    { "ef912485-4c11-426e-a5c9-8fe2c031294c", null, "ADMIN", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -378,13 +459,28 @@ namespace Food.Migrations
                 name: "Commits");
 
             migrationBuilder.DropTable(
+                name: "Hides");
+
+            migrationBuilder.DropTable(
                 name: "Information");
+
+            migrationBuilder.DropTable(
+                name: "MessageModels");
 
             migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Payment");
+
+            migrationBuilder.DropTable(
+                name: "PaymentForOrders");
+
+            migrationBuilder.DropTable(
+                name: "SellerFoods");
+
+            migrationBuilder.DropTable(
+                name: "UserChatModels");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

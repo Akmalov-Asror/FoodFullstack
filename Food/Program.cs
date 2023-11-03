@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Reflection;
 using FluentValidation.AspNetCore;
+using Food.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = new ConfigurationBuilder()
@@ -105,6 +106,7 @@ builder.Services.AddScoped<FoodRepository>();
 builder.Services.AddScoped<CategoryRepository>();
 builder.Services.AddScoped<InformationRepository>();
 builder.Services.AddScoped<OrderRepository>();
+//builder.Services.AddScoped<Audit>();
 builder.Services.AddScoped<PaymentRepository>();
 
 var app = builder.Build();
@@ -122,7 +124,7 @@ app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<AuditMiddleware>();
+//app.UseMiddleware<AuditMiddleware>();
 app.MapControllers();
 
 app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
